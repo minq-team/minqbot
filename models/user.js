@@ -8,6 +8,7 @@ module.exports = function(mongoose) {
 
 		mode: String,
 		step: Number,
+		info: String,
 
 		createdAt: { type: Date, default: Date.now }
 
@@ -21,6 +22,7 @@ module.exports = function(mongoose) {
 	schema.methods.clear = function() {
 		this.mode = null
 		this.step = null
+		this.info = null
 	}
 
 	return { name: name, model: mongoose.model(name, schema)}

@@ -18,16 +18,24 @@ module.exports = function (db, send) {
 		switch(_message) {
 			default:
 				if(menu.includes(_message)) {
-					if(_message !== menu[menu.height - 1]) user.set(_message)
+					if(_message !== menu[menu.height - 1]) {
+						user.set(_message)
+						await user.save()
+					}
 
-					send(user.id, messages[_message + "_message"], _message === menu[menu.length - 1] ? messages.menu_keyboard : messages.back_keyboard)
+					if(messages[_message + "_message_generative"]) {
+						require("./flow")(db, send)(_user, "")
+					} else {
+						send(user.id, messages[_message + "_message"], _message === menu[menu.length - 1] ? messages.menu_keyboard : messages.back_keyboard)
+					}
 				} else {
 					user.clear()
+					await user.save()
 
 					send(user.id, messages.menu, messages.menu_keyboard)
 				}
 
-				await user.save()
+				
 			break
 		}
 	}

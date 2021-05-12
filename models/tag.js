@@ -3,8 +3,8 @@ const name = "Tag"
 module.exports = function(mongoose) {
 	const schema = new mongoose.Schema({
 
-		recommender: Number,
-		recommendee: Number,
+		recommender: String,
+		recommendee: String,
 
 		tag: String,
 

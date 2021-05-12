@@ -17,3 +17,7 @@ Telegram.setCallback((user, message) => {
 		break
 	}
 })
+
+Telegram.setInlineCallback((user, data) => {
+	Minq.flow(user, "show:" + data)
+})
