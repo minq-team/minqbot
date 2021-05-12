@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mongoose": "^5.12.8",
+    "mongoose-auto-increment": "^5.0.1",
     "telegram-bot-api": "^2.0.1"
   }
 }

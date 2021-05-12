@@ -7,9 +7,9 @@ const telegramBot = new telegram({ token: config.telegramToken })
 telegramBot.setMessageProvider(new telegram.GetUpdateMessageProvider())
 
 telegramBot.on("update", message => {
-    const username = message ? message.message ? message.message.chat ? message.message.chat.username : false : false : false
+    const name = message ? message.message ? message.message.chat ? message.message.chat.username : false : false : false
 
-    if(username) telegramCallback({ id: message.message.chat.id, username }, message.message.text)
+    if(name) telegramCallback({ id: message.message.chat.id, name }, message.message.text)
 })
 
 telegramBot.start().then(() => {
@@ -18,11 +18,12 @@ telegramBot.start().then(() => {
 
 module.exports = {
 
-	send: function(message) {
-		telegramBot.sendMessage({
-			chat_id: config.telegramUserId,
-			text: message
-		})
+	send: function(id, message, keyboard) {
+		var message = { chat_id: id, text: message }
+
+		if(keyboard) message.reply_markup = { keyboard }
+
+		telegramBot.sendMessage(message)
 	},
 
 	setCallback: function(callback) {

@@ -1,5 +1,19 @@
 const Telegram = require("./telegram")
+const Minq = require("./controllers")(require("./models").get(), Telegram.send)
+
+const {
+	menu_keyboard,
+	back_keyboard
+} = require("./messages")
 
 Telegram.setCallback((user, message) => {
-	console.log(user, message)
+	switch(message) {
+		case "/start":
+			Minq.start(user)
+		break
+		default:
+			if(menu_keyboard.flat().includes(message) || back_keyboard.flat().includes(message)) Minq.start(user, message)
+			else Minq.flow(user, message)
+		break
+	}
 })
