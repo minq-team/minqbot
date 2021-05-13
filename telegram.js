@@ -7,15 +7,13 @@ const telegramBot = new telegram({ token: config.telegramToken })
 telegramBot.setMessageProvider(new telegram.GetUpdateMessageProvider())
 
 telegramBot.on("update", message => {
-    const name = message ? message.message ? message.message.from ? message.message.from.username : false : false : false
+    const name = message ? message.message ? message.message.from ? message.message.from.username.toLowerCase() : false : false : false
 
     if(name) telegramCallback({ id: message.message.chat.id, name }, message.message.text)
 	else {
-		const nameCallback = message ? message.callback_query ? message.callback_query.from ? message.callback_query.from.username : false : false : false
+		const nameCallback = message ? message.callback_query ? message.callback_query.from ? message.callback_query.from.username.toLowerCase() : false : false : false
 
-	    if(nameCallback) {
-	    	telegramInlineCallback({ id: message.callback_query.from.id, name: nameCallback }, message.callback_query.data)
-	    }
+	    if(nameCallback) telegramInlineCallback({ id: message.callback_query.from.id, name: nameCallback }, message.callback_query.data)
 	}
 })
 

@@ -1,4 +1,4 @@
-const { sleep } = require("../library")
+const { sleep, clean, unique } = require("../library")
 const messages = require("../messages")
 
 module.exports = function (db, send) {
@@ -20,12 +20,8 @@ module.exports = function (db, send) {
 		if(tag) {
 			send(user.id, messages.message(user.mode + "_message_show_your_contact", [show, tagsCloud]), messages.menu_keyboard)
 		} else {
-			function onlyUnique(value, index, self) {
-				return self.indexOf(value) === index
-			}
-
 			const recommended = await db.Tag.find({ recommender: user.name })
-			const recommendersCloud = tags.filter(tag => tag.recommender !== user.name && recommended.map(r => r.recommendee).includes(tag.recommender)).map(tag => "@" + tag.recommender).filter(onlyUnique).join(", ")
+			const recommendersCloud = tags.filter(tag => tag.recommender !== user.name && recommended.map(r => r.recommendee).includes(tag.recommender)).map(tag => "@" + tag.recommender).filter(unique).join(", ")
 
 			send(user.id, messages.message(user.mode + "_message_show_not_your_contact", [recommendersCloud, tagsCloud, recommendersCloud]))
 			await sleep(1000)
@@ -47,11 +43,11 @@ module.exports = function (db, send) {
 
 		switch(user.step) {
 			case 1:
-				user.info = JSON.stringify({ name: _message })
+				user.info = JSON.stringify({ name: clean(_message.toLowerCase(), true) })
 				await user.save()
 			break
 			case 2:
-				if(info && info.name) await addTag(user.name, info.name, _message)
+				if(info && info.name) await addTag(user.name, info.name, clean(_message))
 			break
 			case 3:
 				if(info && info.name) {
@@ -59,9 +55,13 @@ module.exports = function (db, send) {
 
 					if(_message === options[0]) // Yes
 						user.step = 1
-
-					if(_message === options[1]) // No
+					else if(_message === options[1]) // No
 						user.clear()
+					else {
+						await addTag(user.name, info.name, clean(_message))
+						
+						user.step--
+					}
 
 					await user.save()
 
@@ -70,9 +70,9 @@ module.exports = function (db, send) {
 
 						if(recommendeeExisting) {
 							send(recommendeeExisting.id, messages.message(menu[0] + "_recommendee", [user.name, user.name]))
-							send(user.id, messages.message(menu[0] + "_recommender", [info.name, info.name]), messages.menu_keyboard)
+							send(user.id, messages.message(menu[0] + "_recommender", [info.name, info.name, info.name]), messages.menu_keyboard)
 						} else {
-							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing", [info.name]), messages.menu_keyboard)
+							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing", [info.name, info.name, info.name, info.name]), messages.menu_keyboard)
 							await sleep(1000)
 							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing_forward_message", [info.name, user.name]), messages.menu_keyboard)
 						}
@@ -92,7 +92,7 @@ module.exports = function (db, send) {
 	async function generateInlineButtonFor(recommendee) {
 		const tags = await db.Tag.find({ recommendee })
 
-		return [{ text: tags.map(tag => tag.tag).join(", "), callback_data: recommendee }]
+		return [{ text: tags.map(tag => tag.tag).filter(unique).join(", "), callback_data: recommendee }]
 	}
 	
 	flow[menu[1]] = async function(user, _message) {
@@ -146,12 +146,12 @@ module.exports = function (db, send) {
 	// 5. Add myself a skill
 	
 	flow[menu[2/*4*/]] = async function(user, _message) {
-		await addTag(user.name, user.name, _message)
+		await addTag(user.name, user.name, clean(_message))
 
 		user.clear()
 		await user.save()
 
-		send(user.id, messages.message(menu[2/*4*/] + "_tagged", [_message]), messages.menu_keyboard)
+		send(user.id, messages.message(menu[2/*4*/] + "_tagged", [clean(_message)]), messages.menu_keyboard)
 	}
 
 	// 6. Find out @... by ID
