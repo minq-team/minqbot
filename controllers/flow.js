@@ -15,7 +15,7 @@ module.exports = function (db, send) {
 
 		const tag = await db.Tag.findOne({ recommender: user.name, recommendee: show })
 		const tags = await db.Tag.find({ recommendee: show })
-		const tagsCloud = tags.map(tag => tag.tag).join(", ")
+		const tagsCloud = tags.map(tag => tag.tag).filter(unique).join(", ")
 
 		if(tag) {
 			send(user.id, messages.message(user.mode + "_message_show_your_contact", [show, tagsCloud]), messages.menu_keyboard)
@@ -59,7 +59,7 @@ module.exports = function (db, send) {
 						user.clear()
 					else {
 						await addTag(user.name, info.name, clean(_message))
-						
+
 						user.step--
 					}
 
