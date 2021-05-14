@@ -46,7 +46,7 @@ const messages = {
 	
 	// "Explore opportunities_message": "Message 4!",
 	
-	"Promote yourself_message": "Would you like to add something you're great at?",
+	"Promote yourself_message": "Add something you're great at",
 
 	"Promote yourself_tagged": "Nice! You've added \"%%\" to the list of things you're great at. Don't forget to ask your friends to recommend you so that their contacts can discover your talents!\nInvite them to @Minqbot",
 	
