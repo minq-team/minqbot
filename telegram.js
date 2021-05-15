@@ -1,19 +1,23 @@
 const telegram = require("telegram-bot-api")
 const config = require("./config")
 
-var telegramCallback, telegramInlineCallback
+var telegramCallback, telegramInlineCallback, telegramContactCallback
 
 const telegramBot = new telegram({ token: config.telegramToken })
 telegramBot.setMessageProvider(new telegram.GetUpdateMessageProvider())
 
-telegramBot.on("update", message => {
-    const name = message ? message.message ? message.message.from ? message.message.from.username.toLowerCase() : false : false : false
+telegramBot.on("update", message => {console.log(message)
+	if(message.message) {
+		const name = message.message.from ? message.message.username ? message.message.from.username.toLowerCase() : false : false
 
-    if(name) telegramCallback({ id: message.message.chat.id, name }, message.message.text)
-	else {
-		const nameCallback = message ? message.callback_query ? message.callback_query.from ? message.callback_query.from.username.toLowerCase() : false : false : false
+		if(message.message.text) telegramCallback({ id: message.message.from.id, name }, message.message.text)
+		if(message.message.contact) telegramContactCallback({ id: message.message.from.id, name }, message.message.contact)
+	}
 
-	    if(nameCallback) telegramInlineCallback({ id: message.callback_query.from.id, name: nameCallback }, message.callback_query.data)
+	if(message.callback_query) {
+		const name = message.callback_query.from ? message.callback_query.from.username ? message.callback_query.from.username.toLowerCase() : false : false
+
+		telegramInlineCallback({ id: message.callback_query.from.id, name }, message.callback_query.data)
 	}
 })
 
@@ -39,6 +43,10 @@ module.exports = {
 
 	setInlineCallback: function(callback) {
 		telegramInlineCallback = callback
+	},
+
+	setContactCallback: function(callback) {
+		telegramContactCallback = callback
 	}
 
 }

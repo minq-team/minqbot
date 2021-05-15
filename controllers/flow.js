@@ -8,20 +8,28 @@ module.exports = function (db, send) {
 
 		const existing = await db.Tag.findOne(addTag)
 		if(!existing) await db.Tag.create(addTag)
+
+		const user = await db.User.findOne({ $or: [{ name: recommendee }, { phone: recommendee }]})
+		if(user) {
+			const tags = await db.Tag.find({ recommendee })
+
+			user.tags = tags.map(tag => tag.tag).filter(unique).join(", ")
+			await user.save()
+		}
 	}
 
 	async function showContact(user, _message) {
 		const show = _message.replace("show:", "")
 
-		const tag = await db.Tag.findOne({ recommender: user.name, recommendee: show })
+		const tag = await db.Tag.findOne({ recommender: user.identifierRule(), recommendee: show })
 		const tags = await db.Tag.find({ recommendee: show })
 		const tagsCloud = tags.map(tag => tag.tag).filter(unique).join(", ")
 
 		if(tag) {
 			send(user.id, messages.message(user.mode + "_message_show_your_contact", [show, tagsCloud]), messages.menu_keyboard)
 		} else {
-			const recommended = await db.Tag.find({ recommender: user.name })
-			const recommendersCloud = tags.filter(tag => tag.recommender !== user.name && recommended.map(r => r.recommendee).includes(tag.recommender)).map(tag => "@" + tag.recommender).filter(unique).join(", ")
+			const recommended = await db.Tag.find({ recommender: user.identifierRule() })
+			const recommendersCloud = tags.filter(tag => tag.recommender !== user.identifier() && recommended.map(r => r.recommendee).includes(tag.recommender)).map(tag => "@" + tag.recommender).filter(unique).join(", ")
 
 			send(user.id, messages.message(user.mode + "_message_show_not_your_contact", [recommendersCloud, tagsCloud, recommendersCloud]))
 			await sleep(1000)
@@ -47,7 +55,7 @@ module.exports = function (db, send) {
 				await user.save()
 			break
 			case 2:
-				if(info && info.name) await addTag(user.name, info.name, clean(_message))
+				if(info && info.name) await addTag(user.identifier(), info.name, clean(_message))
 			break
 			case 3:
 				if(info && info.name) {
@@ -58,7 +66,7 @@ module.exports = function (db, send) {
 					else if(_message === options[1]) // No
 						user.clear()
 					else {
-						await addTag(user.name, info.name, clean(_message))
+						await addTag(user.identifier(), info.name, clean(_message))
 
 						user.step--
 					}
@@ -69,12 +77,12 @@ module.exports = function (db, send) {
 						const recommendeeExisting = await db.User.findOne({ name: info.name })
 
 						if(recommendeeExisting) {
-							send(recommendeeExisting.id, messages.message(menu[0] + "_recommendee", [user.name, user.name]))
+							send(recommendeeExisting.id, messages.message(menu[0] + "_recommendee", [user.identifier(), user.identifier()]))
 							send(user.id, messages.message(menu[0] + "_recommender", [info.name, info.name, info.name]), messages.menu_keyboard)
 						} else {
 							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing", [info.name, info.name, info.name, info.name]), messages.menu_keyboard)
 							await sleep(1000)
-							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing_forward_message", [info.name, user.name]), messages.menu_keyboard)
+							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing_forward_message", [info.name, user.identifier()]), messages.menu_keyboard)
 						}
 					}
 				}
@@ -88,36 +96,29 @@ module.exports = function (db, send) {
 	}
 
 	// 2. Discover trusted people
-
-	async function generateInlineButtonFor(recommendee) {
-		const tags = await db.Tag.find({ recommendee })
-
-		return [{ text: tags.map(tag => tag.tag).filter(unique).join(", "), callback_data: recommendee }]
-	}
 	
 	flow[menu[1]] = async function(user, _message) {
 		var list = []
 		var filter = []
 
-		const tags = await db.Tag.find({ recommender: user.name, recommendee: { $ne: user.name } })
+		async function add(recommendee) {
+			if(filter.includes(recommendee)) return
+
+			const user = await db.User.findOne({ $or: [{ name: recommendee }, { phone: recommendee }]})
+
+			list.push([{ text: user.tags, callback_data: recommendee }])
+			filter.push(recommendee)
+		}
+
+		const tags = await db.Tag.find({ recommender: user.identifierRule(), recommendee: { $ne: user.identifierRule() } })
 
 		for (var i = 0; i < tags.length; i++) {
 			const tag = tags[i]
+			await add(tag.recommendee)
 
-			const recommendeeTags = await db.Tag.find({ recommender: tag.recommendee, recommendee: { $ne: user.name } })
-
-			if(!filter.includes(tag.recommendee)) {
-				list.push(await generateInlineButtonFor(tag.recommendee))
-				filter.push(tag.recommendee)
-			}
-
+			const recommendeeTags = await db.Tag.find({ recommender: tag.recommendee, recommendee: { $ne: user.identifierRule() } })
 			for (var n = 0; n < recommendeeTags.length; n++) {
-				const recommendeeTag = recommendeeTags[n]
-
-				if(!filter.includes(recommendeeTag.recommendee)) {
-					list.push(await generateInlineButtonFor(recommendeeTag.recommendee))
-					filter.push(recommendeeTag.recommendee)
-				}
+				await add(recommendeeTags[n].recommendee)
 			}
 		}
 
@@ -146,7 +147,7 @@ module.exports = function (db, send) {
 	// 5. Add myself a skill
 	
 	flow[menu[2/*4*/]] = async function(user, _message) {
-		await addTag(user.name, user.name, clean(_message))
+		await addTag(user.identifier(), user.identifier(), clean(_message))
 
 		user.clear()
 		await user.save()
@@ -160,13 +161,15 @@ module.exports = function (db, send) {
 	// 	console.log("!6")
 	// }
 
-	const action = async function(_user, _message) {
-		const user = await db.User.findOneAndUpdate({ id: _user.id }, { $set: { name: _user.name }})
+	const action = async function(_user, _message, _contact) {
+		const user = await db.User.findOneAndUpdate({ id: _user.id }, _user.name ? { $set: { name: _user.name }} : {})
 
 		if(!user || !user.mode) return
 
 		if(_message.startsWith("show:")) {
 			showContact(user, _message)
+		} else if(_message.startsWith("contact:")) {
+			console.log("HHH", _contact)
 		} else {
 			if(menu.includes(user.mode)) {
 				flow[user.mode](user, _message)

@@ -19,13 +19,16 @@ const messages = {
 	greeting: "Welcome to @Minqbot!\n\nUsing Minqbot is simple:\n1. Recommend people you trust. These people will become your contacts on Minqbot and you'll be able to see people they've recommended.\n2. Explore your network: discover all the people recommended by your contacts on Minqbot and see what they're great at (their skills, qualities etc).\n3. Promote yourself: add what you're great at and get recommended by your friends so that people in their networks can discover you.\n\nFor any questions, contact @we_minq.\n\nHappy networking!",
 	menu: "Choose what you'd like to do:",
 
+	phone_required: "Give us your phone number",
+	phone_required_keyboard: [[{ text: "Give", request_contact: true }]],
+
 	back_keyboard: [[back]],
 
 	// menu_keyboard: [["Recommend a friend", "Explore your network"], ["I'm looking for...", "Explore opportunities", "Promote yourself"], ["Find out @... by ID", "Bot info"]],
 	menu_keyboard: [["Recommend a friend", "Explore your network"], ["Promote yourself", "Bot info"]],
 	// !!! ВАЖНО чтобы пункты меню в точности совпадали с ключами сообщений + _message_x ниже:
 
-	"Recommend a friend_message": "Copy/paste a person's @username, e.g. @durov or durov",
+	"Recommend a friend_message": "Copy/paste a person's @username, e.g. @durov or durov. If a person only having phone number send us his contact.",
 	"Recommend a friend_message_1": "Tell us what this person is really great at? One thing!\nE.g. Product Management, EU Financial Law, Interior design etc.\n(must not exceed 50 characters)",
 	"Recommend a friend_message_2": "Would you like to add another thing this person is great at?",
 	"Recommend a friend_keyboard_2": [["Yes", "No"], [back]],

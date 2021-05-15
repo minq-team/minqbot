@@ -21,3 +21,8 @@ Telegram.setCallback((user, message) => {
 Telegram.setInlineCallback((user, data) => {
 	Minq.flow(user, "show:" + data)
 })
+
+Telegram.setContactCallback((user, contact) => {
+	if(user.id === contact.user_id) Minq.start(user, contact)
+	else Minq.flow(user, "contact:", contact)
+})
