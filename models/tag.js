@@ -1,16 +1,14 @@
-const name = "Tag"
+const name = "Tag";
 
-module.exports = function(mongoose) {
-	const schema = new mongoose.Schema({
+module.exports = function (mongoose) {
+  const schema = new mongoose.Schema({
+    recommender: String,
+    recommendee: String,
 
-		recommender: String,
-		recommendee: String,
+    tag: String,
 
-		tag: String,
+    createdAt: { type: Date, default: Date.now },
+  });
 
-		createdAt: { type: Date, default: Date.now }
-
-	})
-
-	return { name: name, model: mongoose.model(name, schema)}
-}
+  return { name: name, model: mongoose.model(name, schema) };
+};

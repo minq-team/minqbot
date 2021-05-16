@@ -1,17 +1,20 @@
-const fs = require("fs")
+const fs = require("fs");
 
-module.exports = function(db, send) {
-	const files = fs.readdirSync(__dirname)
+module.exports = function (db, send) {
+  const files = fs.readdirSync(__dirname);
 
-	var controllers = []
+  var controllers = [];
 
-	for (var i = 0; i < files.length; i++) {
-		const file = files[i]
+  for (var i = 0; i < files.length; i++) {
+    const file = files[i];
 
-		if(file !== "index.js") {
-			controllers[file.replace(".js", "")] = require(__dirname + "/" + file)(db, send)
-		}
-	}
+    if (file !== "index.js") {
+      controllers[file.replace(".js", "")] = require(__dirname + "/" + file)(
+        db,
+        send
+      );
+    }
+  }
 
-	return controllers
-}
+  return controllers;
+};
