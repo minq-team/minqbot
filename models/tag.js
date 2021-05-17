@@ -5,6 +5,8 @@ module.exports = function (mongoose) {
     recommender: String,
     recommendee: String,
 
+    phone: Boolean,
+
     tag: String,
 
     createdAt: { type: Date, default: Date.now },

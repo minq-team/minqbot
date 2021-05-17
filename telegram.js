@@ -7,10 +7,9 @@ const telegramBot = new telegram({ token: config.telegramToken });
 telegramBot.setMessageProvider(new telegram.GetUpdateMessageProvider());
 
 telegramBot.on("update", (message) => {
-  console.log(message);
   if (message.message) {
     const name = message.message.from
-      ? message.message.username
+      ? message.message.from.username
         ? message.message.from.username.toLowerCase()
         : false
       : false;
@@ -47,15 +46,15 @@ telegramBot.start().then(() => {
 
 module.exports = {
   send: function (id, message, keyboard, inline) {
-    var newMessage = { chat_id: id, text: message };
+    var curMes = { chat_id: id, text: message };
 
     if (keyboard) {
-      newMessage.reply_markup = inline
+      curMes.reply_markup = inline
         ? { inline_keyboard: keyboard }
         : { keyboard };
     }
 
-    telegramBot.sendMessage(newMessage);
+    telegramBot.sendMessage(curMes);
   },
 
   setCallback: function (callback) {
