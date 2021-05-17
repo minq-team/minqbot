@@ -8,7 +8,7 @@ telegramBot.setMessageProvider(new telegram.GetUpdateMessageProvider())
 
 telegramBot.on("update", message => {console.log(message)
 	if(message.message) {
-		const name = message.message.from ? message.message.username ? message.message.from.username.toLowerCase() : false : false
+		const name = message.message.from ? message.message.from.username ? message.message.from.username.toLowerCase() : false : false
 
 		if(message.message.text) telegramCallback({ id: message.message.from.id, name }, message.message.text)
 		if(message.message.contact) telegramContactCallback({ id: message.message.from.id, name }, message.message.contact)
