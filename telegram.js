@@ -6,7 +6,7 @@ var telegramCallback, telegramInlineCallback, telegramContactCallback
 const telegramBot = new telegram({ token: config.telegramToken })
 telegramBot.setMessageProvider(new telegram.GetUpdateMessageProvider())
 
-telegramBot.on("update", message => {console.log(message)
+telegramBot.on("update", message => {
 	if(message.message) {
 		const name = message.message.from ? message.message.from.username ? message.message.from.username.toLowerCase() : false : false
 

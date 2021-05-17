@@ -17,13 +17,9 @@ module.exports = function(mongoose) {
 
 	})
 
-	schema.methods.identifier = function() {
-		return this.name ? this.name : this.phone
-	}
-
-	schema.methods.identifierRule = function() {
-		if(this.name && this.phone) return { $or: [{ name: this.name }, { phone: this.phone }] }
-		return this.name ? this.name : this.phone
+	schema.methods.identifier = function(symbol) {
+		symbol = symbol || false 
+		return this.name ? ((symbol ? "@" : "") + this.name) : ((symbol ? "+" : "") + this.phone)
 	}
 
 	schema.methods.set = function(mode, step) {

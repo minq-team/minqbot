@@ -3,36 +3,32 @@ const messages = require("../messages")
 
 module.exports = function (db, send) {
 
-	async function addTag(recommender, recommendee, tag) {
-		const addTag = { recommender, recommendee, tag }
+	async function addTag(recommender, recommendee, tag, phone) {
+		phone = phone || false
+
+		const addTag = { recommender, recommendee, tag, phone }
 
 		const existing = await db.Tag.findOne(addTag)
 		if(!existing) await db.Tag.create(addTag)
-
-		const user = await db.User.findOne({ $or: [{ name: recommendee }, { phone: recommendee }]})
-		if(user) {
-			const tags = await db.Tag.find({ recommendee })
-
-			user.tags = tags.map(tag => tag.tag).filter(unique).join(", ")
-			await user.save()
-		}
 	}
 
 	async function showContact(user, _message) {
 		const show = _message.replace("show:", "")
 
-		const tag = await db.Tag.findOne({ recommender: user.identifierRule(), recommendee: show })
+		const tag = await db.Tag.findOne({ $or: [{ recommender: user.name, recommendee: show }, { recommender: user.phone, recommendee: show }] })
 		const tags = await db.Tag.find({ recommendee: show })
 		const tagsCloud = tags.map(tag => tag.tag).filter(unique).join(", ")
 
+		const showat = /^\d+$/.test(show) ? ("+" + show) : ("@" + show)
+
 		if(tag) {
-			send(user.id, messages.message(user.mode + "_message_show_your_contact", [show, tagsCloud]), messages.menu_keyboard)
+			send(user.id, messages.message(user.mode + "_message_show_your_contact", [showat, tagsCloud]), messages.menu_keyboard)
 		} else {
-			const recommended = await db.Tag.find({ recommender: user.identifierRule() })
-			const recommendersCloud = tags.filter(tag => tag.recommender !== user.identifier() && recommended.map(r => r.recommendee).includes(tag.recommender)).map(tag => "@" + tag.recommender).filter(unique).join(", ")
+			const recommended = await db.Tag.find({ $or: [{ recommender: user.name }, { recommender: user.phone }] })
+			const recommendersCloud = tags.filter(tag => tag.recommender !== user.identifier() && recommended.map(r => r.recommendee).includes(tag.recommender)).map(tag => /^\d+$/.test(tag.recommender) ? ("+" + tag.recommender) : ("@" + tag.recommender)).filter(unique).join(", ")
 
 			send(user.id, messages.message(user.mode + "_message_show_not_your_contact", [recommendersCloud, tagsCloud, recommendersCloud]))
-			await sleep(1000)
+			await sleep(1500)
 			send(user.id, tagsCloud, messages.menu_keyboard)
 		}
 	}
@@ -44,21 +40,42 @@ module.exports = function (db, send) {
 	// 1. Recommend
 
 	flow[menu[0]] = async function(user, _message) {
-		user.step++
-		await user.save()
-
-		const info = JSON.parse(user.info)
+		const info = user.info ? JSON.parse(user.info) : {}
 
 		switch(user.step) {
+			case 0:
+				send(user.id, messages[menu[0] + "_message"], messages[menu[0] + "_keyboard"])
+			break
 			case 1:
-				user.info = JSON.stringify({ name: clean(_message.toLowerCase(), true) })
+				if(info && info.phone) {
+					const number = _message.replace(/[^0-9]/g, "")
+
+					if(number.length < 7 || number.length > 15) {
+						return send(user.id, messages[menu[0] + "_message_wrong_number"], messages.back_keyboard)
+					}
+					
+					user.info = JSON.stringify({ phone: number })
+				} else {
+					const phoneMessage = messages[menu[0] + "_keyboard"][0][0]
+
+					if(phoneMessage === _message) {
+						send(user.id, messages[menu[0] + "_message_request_number"], messages.back_keyboard)
+
+						user.info = JSON.stringify({ phone: true })
+						user.step--
+					} else {
+						user.info = JSON.stringify({ name: clean(_message.toLowerCase(), true) })
+					}
+				}
+
 				await user.save()
 			break
 			case 2:
-				if(info && info.name) await addTag(user.identifier(), info.name, clean(_message))
+				if(info && (info.name || info.phone)) await addTag(user.identifier(), !info.name ? info.phone : info.name, clean(_message), !info.name)
 			break
 			case 3:
-				if(info && info.name) {
+				if(info && (info.name || info.phone)) {
+					const id = !info.name ? info.phone : info.name
 					const options = messages[menu[0] + "_keyboard_2"].flat()
 
 					if(_message === options[0]) // Yes
@@ -66,7 +83,7 @@ module.exports = function (db, send) {
 					else if(_message === options[1]) // No
 						user.clear()
 					else {
-						await addTag(user.identifier(), info.name, clean(_message))
+						await addTag(user.identifier(), id, clean(_message), !info.name)
 
 						user.step--
 					}
@@ -74,15 +91,17 @@ module.exports = function (db, send) {
 					await user.save()
 
 					if(user.mode === null) {
-						const recommendeeExisting = await db.User.findOne({ name: info.name })
+						const recommendeeExisting = await db.User.findOne(!info.name ? { phone: id } : { name: id })
+
+						const idat = !info.name ? ("+" + id) : ("@" + id)
 
 						if(recommendeeExisting) {
-							send(recommendeeExisting.id, messages.message(menu[0] + "_recommendee", [user.identifier(), user.identifier()]))
-							send(user.id, messages.message(menu[0] + "_recommender", [info.name, info.name, info.name]), messages.menu_keyboard)
+							send(recommendeeExisting.id, messages.message(menu[0] + "_recommendee", [user.identifier(true), user.identifier(true)]))
+							send(user.id, messages.message(menu[0] + "_recommender", [idat, idat, idat]), messages.menu_keyboard)
 						} else {
-							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing", [info.name, info.name, info.name, info.name]), messages.menu_keyboard)
-							await sleep(1000)
-							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing_forward_message", [info.name, user.identifier()]), messages.menu_keyboard)
+							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing" + (!info.name ? "_by_phone" : ""), [idat, idat, idat, idat]), messages.menu_keyboard)
+							await sleep(2000)
+							send(user.id, messages.message(menu[0] + "_recommender_recommendee_not_existing_forward_message" + (!info.name ? "_by_phone" : ""), [idat, user.identifier(true)]), messages.menu_keyboard)
 						}
 					}
 				}
@@ -93,6 +112,9 @@ module.exports = function (db, send) {
 		const keyboard = messages[menu[0] + "_keyboard_" + user.step]
 
 		if(message) send(user.id, message, keyboard ? keyboard : messages.back_keyboard)
+
+		user.step++
+		await user.save()	
 	}
 
 	// 2. Discover trusted people
@@ -104,19 +126,19 @@ module.exports = function (db, send) {
 		async function add(recommendee) {
 			if(filter.includes(recommendee)) return
 
-			const user = await db.User.findOne({ $or: [{ name: recommendee }, { phone: recommendee }]})
+			const tags = await db.Tag.find({ $or: [{ phone: { $exists: false }, recommendee }, { phone: false, recommendee }, { phone: true, recommendee: recommendee.replace(/[^0-9]/g, "") }]})
 
-			list.push([{ text: user.tags, callback_data: recommendee }])
+			list.push([{ text: tags.map(tag => tag.tag).filter(unique).join(", "), callback_data: recommendee }])
 			filter.push(recommendee)
 		}
 
-		const tags = await db.Tag.find({ recommender: user.identifierRule(), recommendee: { $ne: user.identifierRule() } })
+		const tags = await db.Tag.find({ recommender: user.name ? user.name : user.phone, recommendee: { $ne: user.identifier() } })
 
 		for (var i = 0; i < tags.length; i++) {
 			const tag = tags[i]
 			await add(tag.recommendee)
 
-			const recommendeeTags = await db.Tag.find({ recommender: tag.recommendee, recommendee: { $ne: user.identifierRule() } })
+			const recommendeeTags = await db.Tag.find({ recommender: tag.recommendee, recommendee: { $ne: user.identifier() } })
 			for (var n = 0; n < recommendeeTags.length; n++) {
 				await add(recommendeeTags[n].recommendee)
 			}
@@ -169,7 +191,9 @@ module.exports = function (db, send) {
 		if(_message.startsWith("show:")) {
 			showContact(user, _message)
 		} else if(_message.startsWith("contact:")) {
-			console.log("HHH", _contact)
+			if(user.mode === menu[0] && user.step === 1) {
+				flow[menu[0]](user, _contact.phone_number)
+			}
 		} else {
 			if(menu.includes(user.mode)) {
 				flow[user.mode](user, _message)
