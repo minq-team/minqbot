@@ -6,7 +6,6 @@ module.exports = {
       instances: 1,
       autorestart: true,
       watch: false,
-      interpreter : 'node@11.15.0',
       max_memory_restart: '1G',
       env_production: {
         NODE_ENV: 'production',
