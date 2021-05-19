@@ -1,6 +1,6 @@
 module.exports = {
     branch: 'master',
-    repositoryUrl: 'git@github.com:minq-team/core-api.git',
+    repositoryUrl: 'git@github.com:minq-team/minq-bot.git',
     plugins: [
       // analyze commits with conventional-changelog
       '@semantic-release/commit-analyzer',
