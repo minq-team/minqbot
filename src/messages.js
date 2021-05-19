@@ -1,6 +1,6 @@
 const config = require("./config");
 const { messages } = require("./locales/" +
-  (config.locale ? config.locale : "en"));
+  (config.LOCALE ? config.LOCALE : "en"));
 
 function message(message, values) {
   var curMes = messages[message];

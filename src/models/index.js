@@ -7,7 +7,7 @@ const config = require("../config");
 
 module.exports = {
   get: function () {
-    mongoose.connect(config.db, {
+    mongoose.connect(config.DB, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,

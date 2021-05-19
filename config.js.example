@@ -1,9 +1,0 @@
-module.exports = {
-
-	locale: "ru",
-
-	telegramToken: "xxxxxx:xxxxxx",
-	
-	db: "mongodb://127.0.0.1:27017/minq",
-
-}

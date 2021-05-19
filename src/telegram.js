@@ -3,7 +3,7 @@ const config = require("./config");
 
 var telegramCallback, telegramInlineCallback, telegramContactCallback;
 
-const telegramBot = new telegram({ token: config.telegramToken });
+const telegramBot = new telegram({ token: config.TELEGRAM_TOKEN });
 telegramBot.setMessageProvider(new telegram.GetUpdateMessageProvider());
 
 telegramBot.on("update", (message) => {
