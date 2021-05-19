@@ -4,7 +4,6 @@
   "description": "Minq bot",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky install",
     "pre-commit": "lint-staged",
     "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
     "start": "node --max_old_space_size=4096 --max_semi_space_size=256 ./src/index.js"
