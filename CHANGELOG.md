@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/minq-team/minqbot/compare/v1.1.1...v1.1.2) (2021-05-24)
+
+
+### Bug Fixes
+
+* **locale:** fixed locale ([1646a90](https://github.com/minq-team/minqbot/commit/1646a90f453c9b66857905a3dc63c98932756bd9))
+
 ## [1.1.1](https://github.com/minq-team/minqbot/compare/v1.1.0...v1.1.1) (2021-05-24)
 
 
