@@ -1,7 +1,7 @@
 version:  "3.7"
 
 x-vars:
-  - &LOCALE ${LOCALE:-RU}
+  - &LOCALE ${LOCALE:-ru}
 
 secrets:
   DB:
