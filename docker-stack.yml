@@ -11,10 +11,9 @@ secrets:
 
 services:
   ru-bot:
-    image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.0.0 
+    image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.0 
     secrets:
       - DB
       - TELEGRAM_TOKEN
     environment: 
       LOCALE: *LOCALE
-      
