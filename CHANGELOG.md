@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/minq-team/minqbot/compare/v1.0.0...v1.1.0) (2021-05-24)
+
+
+### Features
+
+* **docker stack:** docker stack file ([301a85d](https://github.com/minq-team/minqbot/commit/301a85db4ec9e36f5affe4a5e3b36178f6e3b4e1))
+
 # 1.0.0 (2021-05-19)
 
 
