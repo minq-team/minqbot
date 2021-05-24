@@ -1,0 +1,20 @@
+version:  "3.7"
+
+x-vars:
+  - &LOCALE ${LOCALE:-RU}
+
+secrets:
+  DB:
+    external: true
+  TELEGRAM_TOKEN:
+    external: true
+
+services:
+  ru-bot:
+    image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.0.0 
+    secrets:
+      - DB
+      - TELEGRAM_TOKEN
+    environment: 
+      LOCALE: *LOCALE
+      
