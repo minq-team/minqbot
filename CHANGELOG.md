@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/minq-team/minqbot/compare/v1.1.0...v1.1.1) (2021-05-24)
+
+
+### Bug Fixes
+
+* **config:** added it to repo ([d310960](https://github.com/minq-team/minqbot/commit/d3109601bc6a8524a62666412016aafd779877c0))
+
 # [1.1.0](https://github.com/minq-team/minqbot/compare/v1.0.0...v1.1.0) (2021-05-24)
 
 
