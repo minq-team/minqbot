@@ -17,3 +17,5 @@ services:
       - TELEGRAM_TOKEN
     environment: 
       LOCALE: *LOCALE
+    volumes:
+      - ./tmp:/app/tmp
