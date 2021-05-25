@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/minq-team/minqbot/compare/v1.1.3...v1.1.4) (2021-05-25)
+
+
+### Bug Fixes
+
+* **docker:** fonfig ([d1fecf5](https://github.com/minq-team/minqbot/commit/d1fecf52f6bb8286df33f236dd5eceb81fa25cb4))
+
 ## [1.1.3](https://github.com/minq-team/minqbot/compare/v1.1.2...v1.1.3) (2021-05-25)
 
 
