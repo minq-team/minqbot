@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/minq-team/minqbot/compare/v1.1.2...v1.1.3) (2021-05-25)
+
+
+### Bug Fixes
+
+* **docker:** added cert to image ([aa2f6e5](https://github.com/minq-team/minqbot/commit/aa2f6e50feb535ca9fcffb6244220d4615a9b721))
+
 ## [1.1.2](https://github.com/minq-team/minqbot/compare/v1.1.1...v1.1.2) (2021-05-24)
 
 
