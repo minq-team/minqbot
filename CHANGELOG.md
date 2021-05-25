@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/minq-team/minqbot/compare/v1.1.4...v1.1.5) (2021-05-25)
+
+
+### Bug Fixes
+
+* **docker:** config ([b5cdbaa](https://github.com/minq-team/minqbot/commit/b5cdbaa01b2d540cfe3714841072198ba4f69b9c))
+
 ## [1.1.4](https://github.com/minq-team/minqbot/compare/v1.1.3...v1.1.4) (2021-05-25)
 
 
