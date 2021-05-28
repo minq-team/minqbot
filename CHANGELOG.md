@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/minq-team/minqbot/compare/v1.1.7...v1.2.0) (2021-05-28)
+
+
+### Features
+
+* **document db:** enable document db ([451e28c](https://github.com/minq-team/minqbot/commit/451e28cb92192fab0ec2d6287ee3dc50abf5b46a))
+
 ## [1.1.7](https://github.com/minq-team/minqbot/compare/v1.1.6...v1.1.7) (2021-05-25)
 
 
