@@ -5,14 +5,22 @@ const mongoose = require("mongoose"),
 const config = require("../config");
 // const { seed } = require("../seed")
 
+const connOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+};
+
+if (config.DOCUMENT_DB) {
+  const ca = [fs.readFileSync("/tmp/rds-combined-ca-bundle.pem")];
+  connOptions.sslCA = ca;
+  connOptions.sslValidate = true;
+}
+
 module.exports = {
   get: function () {
-    mongoose.connect(config.DB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    });
+    mongoose.connect(config.DB, connOptions);
 
     autoIncrement.initialize(mongoose.connection);
 

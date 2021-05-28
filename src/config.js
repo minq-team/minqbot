@@ -9,6 +9,7 @@ nconf
   })
   .defaults({
     DB: "mongodb://127.0.0.1:27017/minq",
+    DOCUMENT_DB: "false",
     LOCALE: "ru",
     TELEGRAM_TOKEN: "xxxxxx:xxxxxx",
   });
@@ -22,6 +23,7 @@ if (isProd) {
 }
 
 conf.IS_PROD = isProd;
+conf.DOCUMENT_DB = conf.DOCUMENT_DB === "true";
 
 console.log("Current configuration: ", JSON.stringify(conf));
 
