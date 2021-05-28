@@ -5,7 +5,7 @@ const isProd = process.env.NODE_ENV === "production";
 nconf
   .env({
     separator: "__",
-    whitelist: ["DB", "LOCALE", "TELEGRAM_TOKEN"],
+    whitelist: ["DB", "DOCUMENT_DB", "LOCALE", "TELEGRAM_TOKEN"],
   })
   .defaults({
     DB: "mongodb://127.0.0.1:27017/minq",
