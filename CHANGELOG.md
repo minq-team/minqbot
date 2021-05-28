@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/minq-team/minqbot/compare/v1.2.0...v1.2.1) (2021-05-28)
+
+
+### Bug Fixes
+
+* **config:** whitelise ([94b7810](https://github.com/minq-team/minqbot/commit/94b78106cbb980fb1e36c7dbb373a5d70367300f))
+
 # [1.2.0](https://github.com/minq-team/minqbot/compare/v1.1.7...v1.2.0) (2021-05-28)
 
 
