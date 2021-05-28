@@ -2,6 +2,7 @@ version:  "3.7"
 
 x-vars:
   - &LOCALE ${LOCALE:-ru}
+  - &DOCUMENT_DB ${DOCUMENT_DB:-true}
 
 secrets:
   DB:
@@ -18,4 +19,4 @@ services:
     environment: 
       LOCALE: *LOCALE
     volumes:
-      - ./tmp:/app/tmp
+      - /tmp:/tmp
