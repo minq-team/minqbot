@@ -18,6 +18,8 @@ if (config.DOCUMENT_DB) {
   connOptions.sslValidate = true;
 }
 
+console.log(`Connection options: ${JSON.stringify(connOptions)}`);
+
 module.exports = {
   get: function () {
     mongoose.connect(config.DB, connOptions);
