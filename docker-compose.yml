@@ -11,13 +11,13 @@ services:
     image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.4 
     environment: 
       LOCALE: *LOCALE_RU
-      TELEGRAM_TOKEN_RU: *TELEGRAM_TOKEN_RU
+      TELEGRAM_TOKEN: *TELEGRAM_TOKEN_RU
       DB: mongodb://mongodb:27017/minq
   en-bot:
     image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.4 
     environment: 
       LOCALE: *LOCALE_EN
-      TELEGRAM_TOKEN_EN: *TELEGRAM_TOKEN_EN
+      TELEGRAM_TOKEN: *TELEGRAM_TOKEN_EN
       DB: mongodb://mongodb:27017/minq
   mongodb:
     image: mongo:latest
