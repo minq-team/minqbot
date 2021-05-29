@@ -16,11 +16,11 @@ nconf
 
 const conf = nconf.get();
 
-if (isProd) {
-  const secrets = require("@cloudreach/docker-secrets");
-  conf.DB = secrets.DB || conf.DB;
-  conf.TELEGRAM_TOKEN = secrets.TELEGRAM_TOKEN || conf.TELEGRAM_TOKEN;
-}
+// if (isProd) {
+//   const secrets = require("@cloudreach/docker-secrets");
+//   conf.DB = secrets.DB || conf.DB;
+//   conf.TELEGRAM_TOKEN = secrets.TELEGRAM_TOKEN || conf.TELEGRAM_TOKEN;
+// }
 
 conf.IS_PROD = isProd;
 conf.DOCUMENT_DB = conf.DOCUMENT_DB === "true";
