@@ -13,12 +13,16 @@ services:
       LOCALE: *LOCALE_RU
       TELEGRAM_TOKEN: *TELEGRAM_TOKEN_RU
       DB: mongodb://mongodb:27017/minq
+    depends_on:
+      - mongodb
   en-bot:
     image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.4 
     environment: 
       LOCALE: *LOCALE_EN
       TELEGRAM_TOKEN: *TELEGRAM_TOKEN_EN
       DB: mongodb://mongodb:27017/minq
+    depends_on:
+      - mongodb
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
