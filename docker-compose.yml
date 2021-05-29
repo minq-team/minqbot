@@ -1,19 +1,29 @@
 version:  "3.7"
 
 x-vars:
-  - &LOCALE ${LOCALE:-ru}
+  - &LOCALE_RU ${LOCALE:-ru}
+  - &LOCALE_EN ${LOCALE:-en}
 
 secrets:
-  TELEGRAM_TOKEN:
+  TELEGRAM_TOKEN_RU:
+    external: true
+  TELEGRAM_TOKEN_EN:
     external: true
 
 services:
   ru-bot:
-    image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.1.5 
+    image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.4 
     secrets:
-      - TELEGRAM_TOKEN
+      - TELEGRAM_TOKEN_RU
     environment: 
-      LOCALE: *LOCALE
+      LOCALE: *LOCALE_RU
+      DB: mongodb://mongodb:27017/minq
+  en-bot:
+    image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.4 
+    secrets:
+      - TELEGRAM_TOKEN_EN
+    environment: 
+      LOCALE: *LOCALE_EN
       DB: mongodb://mongodb:27017/minq
   mongodb:
     image: mongo:latest
