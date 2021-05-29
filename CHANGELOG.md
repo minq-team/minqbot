@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/minq-team/minqbot/compare/v1.2.6...v1.2.7) (2021-05-29)
+
+
+### Bug Fixes
+
+* **docker compose:** config ([b78b786](https://github.com/minq-team/minqbot/commit/b78b7867f0bc0e6862adb759c3adea9c76c62f4e))
+
 ## [1.2.6](https://github.com/minq-team/minqbot/compare/v1.2.5...v1.2.6) (2021-05-29)
 
 
