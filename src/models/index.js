@@ -7,7 +7,7 @@ const config = require("../config");
 
 const connOptions = {
   useNewUrlParser: true,
-  // useUnifiedTopology: true,
+  useUnifiedTopology: true,
   useCreateIndex: true,
   useFindAndModify: false,
 };
