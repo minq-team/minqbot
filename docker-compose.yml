@@ -33,5 +33,5 @@ services:
       - ./data/db:/data/db
       - ./tmp:/tmp
     ports:
-        - 27017:27017
+      - 27017:27017
     command: mongod --logpath=/dev/null # --quiet
