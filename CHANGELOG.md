@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/minq-team/minqbot/compare/v1.2.7...v1.2.8) (2021-05-29)
+
+
+### Bug Fixes
+
+* **config:** removed secrets ([3c1f685](https://github.com/minq-team/minqbot/commit/3c1f685ee1f00f5a050d43904388207618bb40dc))
+
 ## [1.2.7](https://github.com/minq-team/minqbot/compare/v1.2.6...v1.2.7) (2021-05-29)
 
 
