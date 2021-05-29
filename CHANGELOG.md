@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/minq-team/minqbot/compare/v1.2.1...v1.2.2) (2021-05-29)
+
+
+### Bug Fixes
+
+* **minqbot:** logging ([bea8c71](https://github.com/minq-team/minqbot/commit/bea8c71ea9bb186b2bdcad25a47d565e9242f235))
+
 ## [1.2.1](https://github.com/minq-team/minqbot/compare/v1.2.0...v1.2.1) (2021-05-28)
 
 
