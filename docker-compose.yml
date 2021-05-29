@@ -3,27 +3,21 @@ version:  "3.7"
 x-vars:
   - &LOCALE_RU ${LOCALE:-ru}
   - &LOCALE_EN ${LOCALE:-en}
-
-secrets:
-  TELEGRAM_TOKEN_RU:
-    external: true
-  TELEGRAM_TOKEN_EN:
-    external: true
+  - &TELEGRAM_TOKEN_RU: ${TELEGRAM_TOKEN_RU:-xxxxxx:xxxxxx}
+  - &TELEGRAM_TOKEN_EN: ${TELEGRAM_TOKEN_EN:-xxxxxx:xxxxxx}
 
 services:
   ru-bot:
     image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.4 
-    secrets:
-      - TELEGRAM_TOKEN_RU
     environment: 
       LOCALE: *LOCALE_RU
+      TELEGRAM_TOKEN_RU: *TELEGRAM_TOKEN_RU
       DB: mongodb://mongodb:27017/minq
   en-bot:
     image: 977007773325.dkr.ecr.us-east-1.amazonaws.com/minq-bot:1.2.4 
-    secrets:
-      - TELEGRAM_TOKEN_EN
     environment: 
       LOCALE: *LOCALE_EN
+      TELEGRAM_TOKEN_EN: *TELEGRAM_TOKEN_EN
       DB: mongodb://mongodb:27017/minq
   mongodb:
     image: mongo:latest
@@ -33,6 +27,7 @@ services:
       - MONGO_LOG_DIR=/dev/null
     volumes:
       - ./data/db:/data/db
+      - ./tmp:/tmp
     ports:
         - 27017:27017
     command: mongod --logpath=/dev/null # --quiet
