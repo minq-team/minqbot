@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/minq-team/minqbot/compare/v1.2.2...v1.2.3) (2021-05-29)
+
+
+### Bug Fixes
+
+* **conn:** useUnifiedTopology false ([79e8ba4](https://github.com/minq-team/minqbot/commit/79e8ba4147ff38cffab3fbd426f58de6ade6aa29))
+
 ## [1.2.2](https://github.com/minq-team/minqbot/compare/v1.2.1...v1.2.2) (2021-05-29)
 
 
