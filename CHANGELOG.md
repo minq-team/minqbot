@@ -1,3 +1,10 @@
+## [1.2.10](https://github.com/minq-team/minqbot/compare/v1.2.9...v1.2.10) (2021-05-29)
+
+
+### Bug Fixes
+
+* **dump:** added files ([93b6374](https://github.com/minq-team/minqbot/commit/93b63742780ada65a01676f42974116e7bc457a3))
+
 ## [1.2.9](https://github.com/minq-team/minqbot/compare/v1.2.8...v1.2.9) (2021-05-29)
 
 
